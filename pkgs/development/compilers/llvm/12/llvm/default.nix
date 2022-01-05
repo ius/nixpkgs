@@ -247,7 +247,7 @@ in stdenv.mkDerivation (rec {
   '';
 
   doCheck = stdenv.isLinux && (!stdenv.isx86_32) && (!stdenv.hostPlatform.isMusl)
-    && (stdenv.hostPlatform == stdenv.buildPlatform);
+    && (stdenv.hostPlatform == stdenv.buildPlatform) && (!stdenv.hostPlatform.isRiscV);
 
   checkTarget = "check-all";
 

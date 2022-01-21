@@ -15,6 +15,9 @@ rustPlatform.buildRustPackage rec {
 
   buildInputs = lib.optionals stdenv.isDarwin [ CoreServices ];
 
+  # test 'missing_optional_backends_are_not_fatal' fails on riscv64/qemu due to https://github.com/rust-lang/rust/issues/90825
+  doCheck = (!stdenv.hostPlatform.isRiscV);
+
   meta = with lib; {
     description = "Create books from MarkDown";
     homepage = "https://github.com/rust-lang/mdBook";

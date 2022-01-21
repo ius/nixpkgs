@@ -74,7 +74,7 @@ stdenv.mkDerivation rec {
     fi
   '';
 
-  doCheck = !stdenv.isDarwin;
+  doCheck = !stdenv.isDarwin && !stdenv.hostPlatform.isRiscV;
 
   installFlags = [
     "exampledir=${placeholder "out"}/etc/pkcs11"

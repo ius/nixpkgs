@@ -78,8 +78,8 @@ stdenv.mkDerivation rec {
   # Backtrace unwinding tests rely on glibc-internal symbol names.
   # Musl provides slightly different forms and fails.
   # Let's disable tests there until musl support is fully upstreamed.
-  doCheck = !stdenv.hostPlatform.isMusl;
-  doInstallCheck = !stdenv.hostPlatform.isMusl;
+  doCheck = !stdenv.hostPlatform.isMusl && !stdenv.hostPlatform.isRiscV;
+  doInstallCheck = !stdenv.hostPlatform.isMusl && !stdenv.hostPlatform.isRiscV;
 
   meta = with lib; {
     homepage = "https://sourceware.org/elfutils/";

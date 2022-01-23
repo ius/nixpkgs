@@ -28,7 +28,8 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  doCheck = true;
+  # https://gitlab.com/qemu-project/qemu/-/issues/833
+  doCheck = !stdenv.hostPlatform.isRiscV;
 
   meta = with lib; {
     homepage = "https://01.org/ell";

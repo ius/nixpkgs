@@ -463,6 +463,8 @@ let
       "arm"
     else if pkgs.stdenv.isAarch64 then
       "aa64"
+    else if pkgs.stdenv.isRiscV then
+      "riscv64"
     else
       throw "Unsupported architecture";
 

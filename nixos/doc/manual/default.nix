@@ -33,7 +33,7 @@ let
 
   sources = lib.sourceFilesBySuffices ./. [".xml"];
 
-  modulesDoc = builtins.toFile "modules.xml" ''
+  modulesDoc = pkgs.writeText "modules.xml" ''
     <section xmlns:xi="http://www.w3.org/2001/XInclude" id="modules">
     ${(lib.concatMapStrings (path: ''
       <xi:include href="${path}" />

@@ -13,6 +13,7 @@
 , fetchpatch
 , gettext
 , spidermonkey_78
+, duktape
 , gobject-introspection
 , libxslt
 , docbook-xsl-nons
@@ -27,6 +28,8 @@
 , withIntrospection ? (stdenv.buildPlatform == stdenv.hostPlatform)
 # cross build fails on polkit-1-scan (https://github.com/NixOS/nixpkgs/pull/152704)
 , withGtkDoc ? (stdenv.buildPlatform == stdenv.hostPlatform)
+# Optionally build with duktape instead of mozjs
+, withDuktape ? true
 # A few tests currently fail on musl (polkitunixusertest, polkitunixgrouptest, polkitidentitytest segfault).
 # Not yet investigated; it may be due to the "Make netgroup support optional"
 # patch not updating the tests correctly yet, or doing something wrong,
@@ -74,6 +77,12 @@ stdenv.mkDerivation rec {
       url = "https://git.alpinelinux.org/aports/plain/community/polkit/make-innetgr-optional.patch?id=424ecbb6e9e3a215c978b58c05e5c112d88dddfc";
       sha256 = "0iyiksqk29sizwaa4623bv683px1fny67639qpb1him89hza00wy";
     })
+  ] ++ lib.optionals withDuktape [
+    # Added support for duktape as JS engine
+    (fetchpatch {
+      url = "https://gitlab.freedesktop.org/polkit/polkit/-/commit/c7fc4e1b61f0fd82fc697c19c604af7e9fb291a2.patch";
+      sha256 = "0ky47jcq57pgg134rbihfdk3psh88zjn6zc1hk51ggcmvy01fzbz";
+    })
   ];
 
   nativeBuildInputs = [
@@ -102,7 +111,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     expat
     pam
-    spidermonkey_78
+    (if withDuktape then duktape else spidermonkey_78)
   ] ++ lib.optionals stdenv.isLinux [
     # On Linux, fall back to elogind when systemd support is off.
     (if useSystemd then systemd else elogind)
